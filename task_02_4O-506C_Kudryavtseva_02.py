@@ -2,8 +2,9 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mt
-import requests as rqst
 import re
+import requests as rqst
+
 import scipy.special as sc
 
 #Вычисление коэффициента а:
@@ -46,8 +47,9 @@ def RCS(D, fmin, fmax):
 if not os.path.exists('results'):
     os.mkdir('results')
 r = rqst.get('https://jenyay.net/uploads/Student/Modelling/task_02.txt')
-for i in r.text.splitlines():
-    if re.match(r'2\.', i): z = i 
-match = list(map(lambda z:float(z), re.findall(r'=(\d+\.?\d*[e-]*\d+)',z)))
-D, fmin, fmax = match[0], match[1], match[2]
+z = re.search(r'^2\..+', r.text, flags=re.M)
+z1 = (z.group().split(';'))
+D = float(z1[0].split('=')[1])
+fmin = float(z1[1].split('=')[1])
+fmax = float(z1[2].split('=')[1])
 RCS(D, fmin, fmax)
